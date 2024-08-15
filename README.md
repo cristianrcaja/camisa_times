@@ -1,1 +1,1 @@
-Criando um sistema de venda de camisas de times em java.
+Criando um projeto de venda de camisas de times em java.
