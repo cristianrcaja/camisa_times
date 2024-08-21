@@ -1,10 +1,22 @@
 package tests;
 
+import models.Camiseta;
+import repository.CamisetaRepository;
+import repository.CamisetaRepositoryImpl;
+import enums.CamisetaEnum;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Random;
 import java.util.Scanner;
 
-public class Principal {
+public class Principal{
+    private static int codigoSequencial = 1;
+
     public static void main(String[] args) {
         Scanner leitor = new Scanner(System.in);
+        CamisetaRepository repository = new CamisetaRepositoryImpl();
+        Random random = new Random();
 
         while (true) {
             System.out.println("\n--- Menu Principal ---");
@@ -25,28 +37,72 @@ public class Principal {
                     System.exit(0);
                     break;
                 case 1:
-                    //  Implementar cadastro de camiseta
-                    System.out.println("Cadastro de camiseta ainda não implementado.");
+                    System.out.println("Escolha o modelo da camiseta:");
+                    for (CamisetaEnum modelo : CamisetaEnum.values()) {
+                        System.out.println(modelo.ordinal() + " - " + modelo.getNome());
+                    }
+                    System.out.print("Digite o número do modelo escolhido: ");
+                    int modeloEscolhido = leitor.nextInt();
+                    CamisetaEnum modelo = CamisetaEnum.values()[modeloEscolhido];
+
+
+                    double precoGerado = 200 + (100 * random.nextDouble());
+
+                    BigDecimal preco = new BigDecimal(precoGerado).setScale(2, RoundingMode.HALF_UP);
+
+
+                    int codigo = codigoSequencial++;
+                    repository.cadastrar(new Camiseta(codigo, modelo, preco.doubleValue()));
+
+                    System.out.println("\n--- Camiseta Cadastrada ---");
+                    System.out.println("Código: " + codigo);
+                    System.out.println("Modelo: " + modelo.getNome());
+                    System.out.println("Preço: R$ " + String.format("%.2f", preco.doubleValue()));
                     break;
                 case 2:
-                    //  Implementar listagem de camisetas
-                    System.out.println("Listagem de camisetas ainda não implementada.");
+                    System.out.println("\n--- Lista de Camisetas ---");
+                    repository.listar().forEach(camiseta -> {
+                        System.out.println("Código: " + camiseta.getCodigo());
+                        System.out.println("Modelo: " + camiseta.getModelo().getNome());
+                        System.out.println("Preço: R$ " + String.format("%.2f", camiseta.getPreco()));
+                        System.out.println("------------------------------");
+                    });
+                    System.out.println("\nDeseja voltar ao menu principal? (Digite 'S' para sim ou qualquer outra tecla para sair)");
+                    String resposta = leitor.next();
+                    if (!resposta.equalsIgnoreCase("S")) {
+                        System.out.println("Programa encerrado. Até mais!");
+                        System.exit(0);
+                    }
                     break;
                 case 3:
-                    //  Implementar consulta de camiseta por código
-                    System.out.println("Consulta por código ainda não implementada.");
+                    System.out.print("Digite o código da camiseta que deseja consultar: ");
+                    int codConsulta = leitor.nextInt();
+                    repository.consultarPorCodigo(codConsulta)
+                            .ifPresentOrElse(
+                                    camiseta -> {
+                                        System.out.println("\n--- Detalhes da Camiseta ---");
+                                        System.out.println("Código: " + camiseta.getCodigo());
+                                        System.out.println("Modelo: " + camiseta.getModelo().getNome());
+                                        System.out.println("Preço: R$ " + String.format("%.2f", camiseta.getPreco()));
+                                    },
+                                    () -> System.out.println("Camiseta com o código informado não foi encontrada."));
                     break;
                 case 4:
-                    //  Implementar consulta por xxx
-                    System.out.println("Consulta por xxx ainda não implementada.");
+
+                    System.out.println("Essa funcionalidade ainda não está disponível. Aguarde novidades!");
                     break;
                 case 5:
-                    //  Implementar alteração de camiseta
-                    System.out.println("Alteração de camiseta ainda não implementada.");
+                    // Implementar alteração
+                    System.out.println("Funcionalidade de alteração ainda não implementada.");
                     break;
                 case 6:
-                    //  Implementar exclusão de camiseta
-                    System.out.println("Exclusão de camiseta ainda não implementada.");
+                    System.out.print("Digite o código da camiseta que deseja excluir: ");
+                    int codExcluir = leitor.nextInt();
+                    if (repository.excluir(codExcluir)) {
+                        System.out.println("Camiseta excluída com sucesso!");
+                    } else {
+                        System.out.println("Camiseta com o código informado não foi encontrada.");
+                    }
                     break;
                 default:
                     System.out.println("Opção inválida! Tente novamente.");
