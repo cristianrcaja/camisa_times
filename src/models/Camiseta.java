@@ -4,7 +4,7 @@ import enums.CamisetaEnum;
 
 public class Camiseta {
     private int codigo;
-    private final CamisetaEnum modelo;
+    private CamisetaEnum modelo;
     private double preco;
 
     public Camiseta(int codigo, CamisetaEnum modelo, double preco) {
@@ -21,8 +21,16 @@ public class Camiseta {
         return modelo;
     }
 
+    public void setModelo(CamisetaEnum modelo) {
+        this.modelo = modelo;
+    }
+
     public double getPreco() {
         return preco;
+    }
+
+    public void setPreco(double preco) {
+        this.preco = preco;
     }
 
     @Override

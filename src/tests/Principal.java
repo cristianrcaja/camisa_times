@@ -7,15 +7,16 @@ import enums.CamisetaEnum;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Principal{
+public class Principal {
     private static int codigoSequencial = 1;
 
     public static void main(String[] args) {
         Scanner leitor = new Scanner(System.in);
-        CamisetaRepository repository = new CamisetaRepositoryImpl();
+        CamisetaRepositoryImpl repository = new CamisetaRepositoryImpl(); // Usando a implementação específica
         Random random = new Random();
 
         while (true) {
@@ -25,9 +26,11 @@ public class Principal{
             System.out.println("1 - Cadastrar nova camiseta");
             System.out.println("2 - Listar todas as camisetas");
             System.out.println("3 - Consultar camiseta por código");
-            System.out.println("4 - Consultar por xxx");
-            System.out.println("5 - Alterar uma camiseta");
-            System.out.println("6 - Excluir uma camiseta");
+            System.out.println("4 - Buscar camisetas por preço máximo");
+            System.out.println("5 - Buscar camisetas por modelo");
+            System.out.println("6 - Comparar camisetas em promoção");
+            System.out.println("7 - Alterar uma camiseta");
+            System.out.println("8 - Excluir uma camiseta");
             System.out.print("Sua escolha: ");
             int op = leitor.nextInt();
 
@@ -45,11 +48,8 @@ public class Principal{
                     int modeloEscolhido = leitor.nextInt();
                     CamisetaEnum modelo = CamisetaEnum.values()[modeloEscolhido];
 
-
                     double precoGerado = 200 + (100 * random.nextDouble());
-
                     BigDecimal preco = new BigDecimal(precoGerado).setScale(2, RoundingMode.HALF_UP);
-
 
                     int codigo = codigoSequencial++;
                     repository.cadastrar(new Camiseta(codigo, modelo, preco.doubleValue()));
@@ -67,12 +67,6 @@ public class Principal{
                         System.out.println("Preço: R$ " + String.format("%.2f", camiseta.getPreco()));
                         System.out.println("------------------------------");
                     });
-                    System.out.println("\nDeseja voltar ao menu principal? (Digite 'S' para sim ou qualquer outra tecla para sair)");
-                    String resposta = leitor.next();
-                    if (!resposta.equalsIgnoreCase("S")) {
-                        System.out.println("Programa encerrado. Até mais!");
-                        System.exit(0);
-                    }
                     break;
                 case 3:
                     System.out.print("Digite o código da camiseta que deseja consultar: ");
@@ -88,14 +82,66 @@ public class Principal{
                                     () -> System.out.println("Camiseta com o código informado não foi encontrada."));
                     break;
                 case 4:
-
-                    System.out.println("Essa funcionalidade ainda não está disponível. Aguarde novidades!");
+                    System.out.print("Digite o preço máximo: ");
+                    double precoMaximo = leitor.nextDouble();
+                    repository.buscarCamisetasAbaixoDePreco(precoMaximo);
                     break;
                 case 5:
-                    // Implementar alteração
-                    System.out.println("Funcionalidade de alteração ainda não implementada.");
+                    System.out.println("Escolha o modelo da camiseta:");
+                    for (CamisetaEnum mod : CamisetaEnum.values()) {
+                        System.out.println(mod.ordinal() + " - " + mod.getNome());
+                    }
+                    System.out.print("Digite o número do modelo escolhido: ");
+                    int modEscolhido = leitor.nextInt();
+                    CamisetaEnum mod = CamisetaEnum.values()[modEscolhido];
+                    List<Camiseta> resultado = repository.buscarCamisetasPorModelo(mod);
+                    resultado.forEach(camiseta -> {
+                        System.out.println("Código: " + camiseta.getCodigo());
+                        System.out.println("Modelo: " + camiseta.getModelo().getNome());
+                        System.out.println("Preço: R$ " + String.format("%.2f", camiseta.getPreco()));
+                        System.out.println("------------------------------");
+                    });
                     break;
                 case 6:
+                    // Simulação de listas para a comparação
+                    List<Camiseta> camisetasPromocao = List.of(
+                            new Camiseta(999, CamisetaEnum.CLASSICA, 50.00),
+                            new Camiseta(1000, CamisetaEnum.POLO, 60.00)
+                    );
+
+                    System.out.println("\n--- Comparando camisetas em promoção com as cadastradas ---");
+                    List<Camiseta> comparacao = repository.compararComPromocao(camisetasPromocao);
+                    comparacao.forEach(camiseta -> {
+                        System.out.println("Código: " + camiseta.getCodigo());
+                        System.out.println("Modelo: " + camiseta.getModelo().getNome());
+                        System.out.println("Preço: R$ " + String.format("%.2f", camiseta.getPreco()));
+                        System.out.println("------------------------------");
+                    });
+                    break;
+                case 7:
+                    System.out.print("Digite o código da camiseta que deseja alterar: ");
+                    int codAlterar = leitor.nextInt();
+                    repository.consultarPorCodigo(codAlterar).ifPresentOrElse(
+                            camiseta -> {
+                                System.out.println("Camiseta encontrada. Informe o novo modelo.");
+                                System.out.println("Escolha o novo modelo da camiseta:");
+                                for (CamisetaEnum modeloOpcao : CamisetaEnum.values()) {
+                                    System.out.println(modeloOpcao.ordinal() + " - " + modeloOpcao.getNome());
+                                }
+                                System.out.print("Digite o número do novo modelo escolhido: ");
+                                int modeloSelecionado = leitor.nextInt();
+                                CamisetaEnum novoModelo = CamisetaEnum.values()[modeloSelecionado];
+
+                                // Atualiza apenas o modelo da camiseta
+                                camiseta.setModelo(novoModelo);
+
+                                repository.alterar(camiseta);
+                                System.out.println("Modelo da camiseta alterado com sucesso!");
+                            },
+                            () -> System.out.println("Camiseta com o código informado não foi encontrada.")
+                    );
+                    break;
+                case 8:
                     System.out.print("Digite o código da camiseta que deseja excluir: ");
                     int codExcluir = leitor.nextInt();
                     if (repository.excluir(codExcluir)) {

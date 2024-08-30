@@ -1,14 +1,18 @@
 package enums;
 
-
-  //Aqui são as camisetas disponíveis ate o momento em nossa loja
-
+// Aqui são as camisetas disponíveis até o momento em nossa loja
 public enum CamisetaEnum {
     FLAMENGO("Flamengo"),
     PALMEIRAS("Palmeiras"),
     SAO_PAULO("São Paulo"),
     VASCO("Vasco"),
-    CORINTHIANS("Corinthians");
+    CORINTHIANS("Corinthians"),
+    BÁSICA("Básica"),
+    ESTAMPADA("Estampada"),
+    PERSONALIZADA("Personalizada"),
+    RETRÔ("Retrô"),
+    CLASSICA("Clássica"),
+    POLO("Polo");
 
     private String nome;
 
