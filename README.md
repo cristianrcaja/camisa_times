@@ -6,15 +6,18 @@
 - [x] Listar Camisetas
 - [x] Consultar Camiseta por Código
 - [x] Excluir Camiseta
+- [x] Alterar Camiseta (somente o modelo)
+- [x] Buscar Camisetas por Preço Máximo
+- [x]  Buscar Camisetas por Modelo
+- [x]  Comparar Camisetas em Promoção
 
-## Melhorias futuras
-
-- [x] Adicionar persistência de dados
-- [x] Implementar a alteração de camisetas
-- [x] Criar interface gráfica.
 
 
 ## Equipe
 
 - Igor Werneck Jacobosque RM: 558395
 - Cristian Caja Rodrigues RM: 558502
+
+
+
+esse é o read me do meu projeto, atualize ele com as novas coisas adicionadas
