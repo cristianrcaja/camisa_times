@@ -1,7 +1,7 @@
 package repository;
 
 import models.Camiseta;
-import enums.CamisetaEnum; // Certifique-se de importar o enum corretamente
+import enums.CamisetaEnum;
 
 import java.util.List;
 import java.util.Optional;

@@ -16,7 +16,7 @@ public class Principal {
 
     public static void main(String[] args) {
         Scanner leitor = new Scanner(System.in);
-        CamisetaRepositoryImpl repository = new CamisetaRepositoryImpl(); // Usando a implementação específica
+        CamisetaRepositoryImpl repository = new CamisetaRepositoryImpl();
         Random random = new Random();
 
         while (true) {
@@ -103,7 +103,7 @@ public class Principal {
                     });
                     break;
                 case 6:
-                    // Simulação de listas para a comparação
+
                     List<Camiseta> camisetasPromocao = List.of(
                             new Camiseta(999, CamisetaEnum.CLASSICA, 50.00),
                             new Camiseta(1000, CamisetaEnum.POLO, 60.00)
@@ -132,7 +132,7 @@ public class Principal {
                                 int modeloSelecionado = leitor.nextInt();
                                 CamisetaEnum novoModelo = CamisetaEnum.values()[modeloSelecionado];
 
-                                // Atualiza apenas o modelo da camiseta
+
                                 camiseta.setModelo(novoModelo);
 
                                 repository.alterar(camiseta);
